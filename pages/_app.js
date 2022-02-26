@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { AccountContext } from "contexts/AccountContext";
-import { ownerAddress } from "../config";
+import { ownerAddress } from "config";
 import "easymde/dist/easymde.min.css";
 
 function MyApp({ Component, pageProps }) {
@@ -35,15 +35,11 @@ function MyApp({ Component, pageProps }) {
   async function connect() {
     try {
       const web3Modal = await getWeb3Modal();
-      debugger;
       const connectionProvider = await web3Modal.connect();
-      debugger;
       const web3Provider = new ethers.providers.Web3Provider(
         connectionProvider
       );
-      debugger;
       const accounts = await web3Provider.listAccounts();
-      debugger;
       setAccount(accounts[0]);
     } catch (err) {
       console.log("error:", err);

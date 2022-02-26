@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable @next/next/no-img-element */
 /* pages/index.js */
 import { css } from "@emotion/css";
 import { useContext } from "react";
@@ -28,28 +30,30 @@ export default function Home(props) {
       <div className={postList}>
         {
           /* map over the posts array and render a button with the post title */
-          posts.map((post, index) => (
-            <Link href={`/post/${post[2]}`} key={index}>
-              <a>
-                <div className={linkStyle}>
-                  <p className={postTitle}>{post[1]}</p>
-                  <div className={arrowContainer}>
-                    <img
-                      src="/right-arrow.svg"
-                      alt="Right arrow"
-                      className={smallArrow}
-                    />
+          posts.map((post, index) => {
+            console.log({ index: post });
+            return (
+              <Link href={`/post/${post[2]}`} key={index}>
+                <a>
+                  <div className={linkStyle}>
+                    <p className={postTitle}>{post[1]}</p>
+                    <div className={arrowContainer}>
+                      <img
+                        src="/right-arrow.svg"
+                        alt="Right arrow"
+                        className={smallArrow}
+                      />
+                    </div>
                   </div>
-                </div>
-              </a>
-            </Link>
-          ))
+                </a>
+              </Link>
+            );
+          })
         }
       </div>
       <div className={container}>
+        {/* If user is exist but there is no post render a button for creating a post */}
         {account === ownerAddress && posts && !posts.length && (
-          /* if the signed in user is the account owner, render a button */
-          /* to create the first post */
           <button className={buttonStyle} onClick={navigate}>
             Create your first post
             <img src="/right-arrow.svg" alt="Right arrow" className={arrow} />
@@ -60,11 +64,14 @@ export default function Home(props) {
   );
 }
 
+// getting posts from smart contract on server side
+// attached posts to props of the Home Page
 export async function getServerSideProps() {
   /* here we check to see the current environment variable */
   /* and render a provider based on the environment we're in */
   let provider;
   if (process.env.ENVIRONMENT === "local") {
+    // This will use http://localhost:8545
     provider = new ethers.providers.JsonRpcProvider();
   } else if (process.env.ENVIRONMENT === "testnet") {
     provider = new ethers.providers.JsonRpcProvider(
@@ -74,15 +81,19 @@ export async function getServerSideProps() {
     provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
   }
 
+  console.log({ contractAddress });
+  console.log({ abi: Blog.abi });
+  console.log({ provider });
+
   const contract = new ethers.Contract(contractAddress, Blog.abi, provider);
   console.log({ contract });
 
   // TODO: Below code seems throwing an error
-  // const data = await contract.fetchPosts();
+  const data = await contract.fetchPosts();
+  console.log({ data });
   return {
     props: {
-      // posts: JSON.parse(JSON.stringify(data)),
-      posts: [],
+      posts: JSON.parse(JSON.stringify(data)),
     },
   };
 }

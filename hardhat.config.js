@@ -1,4 +1,7 @@
+require("dotenv").config();
 require("@nomiclabs/hardhat-waffle");
+
+const { PK } = process.env;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -22,10 +25,10 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    // mumbai: {
-    //   url: "https://rpc-mumbai.matic.today",
-    //   accounts: [process.env.pk]
-    // },
+    mumbai: {
+      url: "https://rpc-mumbai.matic.today",
+      accounts: [`0x${PK}`],
+    },
     // polygon: {
     //   url: "https://polygon-rpc.com/",
     //   accounts: [process.env.pk]

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* pages/create-post.js */
 import { useState, useRef, useEffect } from "react"; // new
 import { useRouter } from "next/router";
@@ -8,7 +9,8 @@ import { create } from "ipfs-http-client";
 
 /* import contract address and contract owner address */
 
-import Blog from "../../artifacts/contracts/Blog.sol/Blog.json";
+// import Blog from "../../artifacts/contracts/Blog.sol/Blog.json";
+import Blog from "artifacts/contracts/Blog.sol/Blog.json";
 import { contractAddress } from "config";
 
 /* define the ipfs endpoint */
@@ -54,6 +56,7 @@ function CreatePost() {
     /* save post metadata to ipfs */
     try {
       const added = await client.add(JSON.stringify(post));
+      console.log({ added });
       return added.path;
     } catch (err) {
       console.log("error: ", err);
@@ -70,7 +73,7 @@ function CreatePost() {
       try {
         const val = await contract.createPost(post.title, hash);
         /* optional - wait for transaction to be confirmed before rerouting */
-        /* await provider.waitForTransaction(val.hash) */
+        await provider.waitForTransaction(val.hash);
         console.log("val: ", val);
       } catch (err) {
         console.log("Error: ", err);

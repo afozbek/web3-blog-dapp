@@ -22,7 +22,7 @@ export default function Home(props) {
 
   const router = useRouter();
   async function navigate() {
-    router.push("/create-post");
+    router.push("/createPost");
   }
 
   return (

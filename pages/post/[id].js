@@ -31,7 +31,7 @@ export default function Post({ post }) {
             /* if the owner is the user, render an edit button */
             ownerAddress === account && (
               <div className={editPost}>
-                <Link href={`/edit-post/${id}`}>
+                <Link href={`/editPost/${id}`}>
                   <a>Edit post</a>
                 </Link>
               </div>
